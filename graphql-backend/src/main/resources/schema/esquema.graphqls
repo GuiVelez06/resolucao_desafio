@@ -1,0 +1,30 @@
+type Query {
+    """
+    Página das fotos de uma plataforma, considerando as fotos de todos os seus módulos
+    como uma única sequência ordenada por ID do módulo e, dentro dele, por ID da foto.
+    """
+    platformPhotos(
+        platformId: Int!
+        "Posição da primeira foto na sequência da plataforma (>= 0)."
+        offset: Int! = 0
+        "Quantidade máxima de fotos na página (entre 1 e 200)."
+        limit: Int! = 50
+    ): PlatformPhotoPage!
+}
+
+type PlatformPhotoPage {
+    items: [Photo!]!
+    offset: Int!
+    limit: Int!
+    "Total de fotos da plataforma."
+    total: Int!
+    "Indica se existem fotos depois desta página."
+    hasNextPage: Boolean!
+}
+
+type Photo {
+    id: Int!
+    moduleId: Int!
+    name: String!
+    url: String!
+}

@@ -25,6 +25,23 @@ A REST roda em `http://localhost:8000` e o backend Kotlin em `http://localhost:8
 
 Sem schema, o backend inicia como estrutura base, mas não oferece operações GraphQL. Após a implementação do candidato, os caminhos padrão serão `/graphql` e `/graphiql`.
 
+## Consulta de fotos por plataforma
+
+Com os dois serviços rodando, abra `http://localhost:8080/graphiql` e execute:
+
+```graphql
+{
+  platformPhotos(platformId: 1, offset: 1990, limit: 30) {
+    offset limit total hasNextPage
+    items { id moduleId name url }
+  }
+}
+```
+
+`offset` (padrão 0) e `limit` (padrão 50, entre 1 e 200) consideram as 80.000 fotos da plataforma como uma única sequência, ordenada por módulo e foto. A query faz 1 chamada REST para os módulos e no máximo 2 para as fotos. Erros retornam `errorType` nas extensões: `BAD_REQUEST` (parâmetros inválidos), `NOT_FOUND` (plataforma inexistente) e `UNAVAILABLE` (falha na REST).
+
+Os testes (`./gradlew test`) usam uma REST falsa embutida, então não precisam do servidor Python.
+
 ## Executar com Docker Compose
 
 ```bash
